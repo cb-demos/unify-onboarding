@@ -375,7 +375,11 @@ read_or_eof() {
 prompt_count() {
   local prompt="$1" default="$2" val
   while true; do
-    read_or_eof val "$prompt" || return 1
+    # On EOF (stdin exhausted), fall back to the default instead of
+    # returning nothing — an empty string here crashes the caller's
+    # numeric comparison ([: : integer expression expected) instead of
+    # cleanly using the documented default.
+    read_or_eof val "$prompt" || { printf '%s' "$default"; return; }
     if [ -z "$val" ]; then printf '%s' "$default"; return; fi
     case "$val" in
       *[!0-9]*) echo "  Please enter a whole number (digits only) — try again." >&2 ;;
