@@ -1,0 +1,8 @@
+*.env
+onboarding.env
+.env
+*.log
+dest-dir/
+values.json
+properties*.json
+*_response*.json
